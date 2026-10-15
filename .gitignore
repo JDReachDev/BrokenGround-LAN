@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+build/
+dist/
+__pycache__/
+
+# Game files and decompiled game code: copyrighted, never commit
+decompiled/
+original/
+*.orig.dll
+Assembly-CSharp.dll
+
+# Local notes
+NOTE_PROGETTO.md
