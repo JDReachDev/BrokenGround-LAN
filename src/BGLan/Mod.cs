@@ -13,7 +13,7 @@ namespace BGLan
 {
     public static class Mod
     {
-        public const string Version = "1.2";
+        public const string Version = "1.3";
 
         private static bool initialized;
         private static HttpServer http;
@@ -125,19 +125,7 @@ namespace BGLan
 
     public class LanBehaviour : MonoBehaviour
     {
-        private string ipField;
-        private bool hostField;
-        private Rect window = new Rect(10, 10, 360, 210);
-        private bool applied;
-        private bool appliedHost;
-        private string appliedIp;
-        private GUIStyle appliedStyle;
-
-        private void Start()
-        {
-            ipField = Config.HostAddress;
-            hostField = Config.IsHost;
-        }
+        private LanPanel panel;
 
         private static readonly List<KeyValuePair<float, Action>> later = new List<KeyValuePair<float, Action>>();
 
@@ -168,48 +156,8 @@ namespace BGLan
         {
             // Only before logging in: afterwards the server address cannot change.
             if (PlayFabClientAPI.IsClientLoggedIn()) return;
-            window = GUILayout.Window(735001, window, DrawWindow, "Broken Ground LAN " + Mod.Version);
-        }
-
-        private void DrawWindow(int id)
-        {
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Toggle(hostField, " I host")) hostField = true;
-            if (GUILayout.Toggle(!hostField, " Join a friend")) hostField = false;
-            GUILayout.EndHorizontal();
-
-            if (!hostField)
-            {
-                GUILayout.Label("IP address of the host PC:");
-                ipField = GUILayout.TextField(ipField ?? "", 64);
-            }
-
-            if (GUILayout.Button("Apply"))
-            {
-                Config.IsHost = hostField;
-                if (!hostField) Config.HostAddress = (ipField ?? "").Trim();
-                Config.Save();
-                Mod.Apply();
-                appliedHost = hostField;
-                appliedIp = ipField;
-                applied = true;
-            }
-
-            // The confirmation disappears as soon as the settings are edited again.
-            if (applied && (hostField != appliedHost || (!hostField && ipField != appliedIp))) applied = false;
-            if (applied)
-            {
-                if (appliedStyle == null)
-                {
-                    appliedStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, wordWrap = true };
-                    appliedStyle.normal.textColor = new Color(0.4f, 1f, 0.4f);
-                }
-                GUILayout.Label("Settings applied! Now click \"Connect\".", appliedStyle);
-            }
-
-            GUILayout.Space(6);
-            GUILayout.Label(Mod.Status);
-            GUI.DragWindow();
+            if (panel == null) panel = new LanPanel();
+            panel.Draw();
         }
     }
 }
