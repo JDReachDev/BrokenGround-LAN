@@ -80,6 +80,11 @@ py tools\bot.py                    # a dummy opponent that joins your lobby and 
 
 The game's own code is not included in this repository; the mod is compiled against your local installation.
 
+## Support
+
+If you enjoy playing Broken Ground again, you can support the project on Ko-fi:
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/jdreach)
+
 ## License
 
 [MIT](LICENSE) for the code in this repository. Broken Ground and its assets belong to their owners.

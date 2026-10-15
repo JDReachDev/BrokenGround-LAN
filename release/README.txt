@@ -68,5 +68,10 @@ UNINSTALL
 Double click Uninstall.bat (or verify the game files in Steam).
 
 
+SUPPORT
+-------
+The mod is free. If you want to support it: https://ko-fi.com/jdreach
+
+
 This is an unofficial fan-made mod, not affiliated with Bad Viking.
 Source code: https://github.com/JDReachDev/BrokenGround-LAN
