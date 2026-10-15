@@ -42,5 +42,6 @@ Copy-Item "$root\LICENSE" "$stage\LICENSE.txt"
 (Get-Content "$stage\README.txt" -Raw).Replace("{VERSION}", $version) | Set-Content "$stage\README.txt" -NoNewline
 
 $zip = "$root\dist\BrokenGround_LAN_v$version.zip"
-Compress-Archive -Path "$stage\*" -DestinationPath $zip -Force
+# The zip contains a single folder with the files inside, not loose files.
+Compress-Archive -Path $stage -DestinationPath $zip -Force
 Write-Host "Release ready: $zip"
