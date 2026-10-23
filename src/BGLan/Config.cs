@@ -90,6 +90,9 @@ namespace BGLan
         private static readonly object Lock = new object();
         private static string path;
 
+        /// <summary>Log file name inside the game folder; the dedicated server uses its own file.</summary>
+        public static string FileName = "BGLan.log";
+
         public static void Info(string msg) { Write("INFO", msg); }
         public static void Warn(string msg) { Write("WARN", msg); }
         public static void Error(string msg) { Write("ERROR", msg); }
@@ -103,7 +106,7 @@ namespace BGLan
                 {
                     if (path == null)
                     {
-                        path = Path.Combine(Config.GameDir, "BGLan.log");
+                        path = Path.Combine(Config.GameDir, FileName);
                         File.WriteAllText(path, "");
                     }
                     File.AppendAllText(path, line + Environment.NewLine);

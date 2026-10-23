@@ -84,12 +84,33 @@ namespace BGLan.PlayFabEmu
                 case "GetFriendLeaderboard":
                 case "GetLeaderboardAroundPlayer":
                     return Leaderboard(req);
-                case "StartGame": return StartGame(me, Parse<StartGameRequest>(req), req.LocalAddress);
-                case "Matchmake": return Matchmake(me, Parse<MatchmakeRequest>(req), req.LocalAddress);
+                case "StartGame": return StartGame(me, Parse<StartGameRequest>(req), GameServerAddress(req));
+                case "Matchmake": return Matchmake(me, Parse<MatchmakeRequest>(req), GameServerAddress(req));
                 case "GetCurrentGames": return CurrentGames(Parse<CurrentGamesRequest>(req));
                 case "BGLanUpdateStats": return UpdateStats(me, req);
             }
             throw new ApiError("APINotEnabledForGameClientAccess", 1083, api + " is not available on a LAN server");
+        }
+
+        /// <summary>
+        /// The address the player used to reach this server (HTTP Host header): their LAN IP, VPN IP, public IP or DNS
+        /// name. Behind a router with port forwarding this PC's own address would be a private one the player cannot reach.
+        /// </summary>
+        private static string GameServerAddress(HttpRequestInfo req)
+        {
+            string host = req.Header("Host");
+            if (!string.IsNullOrEmpty(host))
+            {
+                if (host.StartsWith("["))
+                {
+                    int end = host.IndexOf(']');
+                    if (end > 0) return host.Substring(1, end - 1);
+                }
+                int colon = host.LastIndexOf(':');
+                if (colon > 0) host = host.Substring(0, colon);
+                if (host.Length > 0) return host;
+            }
+            return req.LocalAddress;
         }
 
         private static T Parse<T>(HttpRequestInfo req) where T : class, new()

@@ -60,12 +60,12 @@ namespace BGLan
             float y = r.y + 50, x = r.x + 20, h = 44;
             if (GUI.Button(new Rect(x, y, 150, h), "HOST", hostField ? selected : unselected)) hostField = true;
             x += 158;
-            if (GUI.Button(new Rect(x, y, 220, h), "JOIN A FRIEND", hostField ? unselected : selected)) hostField = false;
-            x += 236;
+            if (GUI.Button(new Rect(x, y, 150, h), "JOIN", hostField ? unselected : selected)) hostField = false;
+            x += 166;
             if (!hostField)
             {
-                GUI.Label(new Rect(x, y, 90, h), "HOST IP", label);
-                x += 92;
+                GUI.Label(new Rect(x, y, 120, h), "SERVER IP", label);
+                x += 122;
                 ipField = GUI.TextField(new Rect(x, y, 200, h), ipField ?? "", 64, field);
             }
             if (GUI.Button(new Rect(r.xMax - 170, y, 150, h), "APPLY", selected)) Apply();

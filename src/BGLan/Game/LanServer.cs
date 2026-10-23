@@ -218,6 +218,30 @@ namespace BGLan.Game
             if (c.Lobby != null && !c.IsService) c.Lobby.Leave(c);
         }
 
+        /// <summary>Lines for the console "list" command.</summary>
+        public List<string> Describe()
+        {
+            var lines = new List<string>();
+            int players = lobbies.Sum(l => l.PlayerCount);
+            lines.Add(lobbies.Count + " game(s), " + players + " player(s) in games, " + connections.Count(c => c.IsService) + " online");
+            foreach (Lobby l in lobbies) lines.Add("  " + l.Describe());
+            return lines;
+        }
+
+        /// <summary>Disconnects the player with that display name (console "kick" command).</summary>
+        public bool Kick(string name)
+        {
+            foreach (Connection c in connections.ToArray())
+            {
+                Profile p = Profiles.Get(c.PlayFabId);
+                if (p == null || !string.Equals(p.DisplayName, name, StringComparison.OrdinalIgnoreCase)) continue;
+                c.Close();
+                OnDisconnected(c);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>Called every frame from the main thread.</summary>
         public void Tick()
         {

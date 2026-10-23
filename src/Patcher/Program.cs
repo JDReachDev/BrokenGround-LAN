@@ -35,6 +35,11 @@ if (args.Contains("--uninstall"))
 {
     if (File.Exists(original)) File.Copy(original, target, true);
     if (File.Exists(modTarget)) File.Delete(modTarget);
+    foreach (string f in new[] { ServerScript, ServerBat })
+    {
+        string p = Path.Combine(gameDir, f);
+        if (File.Exists(p)) File.Delete(p);
+    }
     Console.WriteLine("Mod removed, the game has been restored.");
     return Exit(0);
 }
@@ -55,6 +60,7 @@ if (!File.Exists(modSource))
     return Exit(1);
 }
 File.Copy(modSource, modTarget, true);
+InstallDedicatedServer(gameDir);
 
 var resolver = new DefaultAssemblyResolver();
 resolver.AddSearchDirectory(managed);
@@ -112,6 +118,24 @@ using (var game = AssemblyDefinition.ReadAssembly(original, readParams))
 
 Console.WriteLine("Done! Broken Ground is ready for LAN play.");
 return Exit(0);
+
+// The dedicated server console script goes in the game folder, with a .bat to start it there and one next to the
+// patcher (pointing to the game folder) so players find it easily.
+static void InstallDedicatedServer(string gameDir)
+{
+    string script = Path.Combine(AppContext.BaseDirectory, ServerScript);
+    if (!File.Exists(script)) return;
+    File.Copy(script, Path.Combine(gameDir, ServerScript), true);
+    File.WriteAllText(Path.Combine(gameDir, ServerBat),
+        "@echo off\r\npowershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0" + ServerScript + "\"\r\n");
+    try
+    {
+        File.WriteAllText(Path.Combine(AppContext.BaseDirectory, ServerBat),
+            "@echo off\r\npowershell -NoProfile -ExecutionPolicy Bypass -File \"" + Path.Combine(gameDir, ServerScript) + "\"\r\n");
+    }
+    catch { }
+    Console.WriteLine("Dedicated server installed: run \"" + ServerBat + "\"");
+}
 
 static MethodDefinition Method(ModuleDefinition module, string type, string name)
 {
@@ -198,4 +222,10 @@ static int Exit(int code)
         Console.ReadLine();
     }
     return code;
+}
+
+partial class Program
+{
+    const string ServerScript = "BGLan_Server.ps1";
+    const string ServerBat = "Start Dedicated Server.bat";
 }

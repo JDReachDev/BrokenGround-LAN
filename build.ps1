@@ -24,6 +24,7 @@ if ($LASTEXITCODE -ne 0) { throw "Mod build failed" }
 dotnet build "$root\src\Patcher\Patcher.csproj" -c Release -o "$root\build\patcher" --nologo -v q
 if ($LASTEXITCODE -ne 0) { throw "Installer build failed" }
 Copy-Item "$root\src\BGLan\bin\Release\BGLan.dll" "$root\build\patcher\" -Force
+Copy-Item "$root\release\BGLan_Server.ps1" "$root\build\patcher\" -Force
 
 if (-not $NoPatch) {
     if (Get-Process BrokenGround -ErrorAction SilentlyContinue) { throw "Close Broken Ground before patching (or use -NoPatch)" }

@@ -88,6 +88,13 @@ namespace BGLan.Game
         public TimeSpan Age { get { return DateTime.UtcNow - created; } }
         public List<string> PlayFabIds { get { return players.Select(p => p.Profile.PlayFabId).ToList(); } }
 
+        public string Describe()
+        {
+            string names = string.Join(", ", players.Select(p => p.Profile.DisplayName ?? p.Profile.PlayFabId).ToArray());
+            return Id + " " + mode.displayName + " (" + players.Count + "/" + MaxPlayers + ") " + state +
+                   (IsPrivate ? " private" : "") + ": " + names;
+        }
+
         /// <summary>CreateMultiplayer sends "map,health,time,walls,ceiling,gravity,wind,roulette,bigExplosions,private".</summary>
         private void ApplyCustomData(string data)
         {

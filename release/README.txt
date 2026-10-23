@@ -18,23 +18,36 @@ INSTALL (every player)
 The installer keeps a backup of the original game file (Assembly-CSharp.orig.dll).
 To update to a newer version of the mod, just run the new BGLanPatcher.exe.
 Everybody playing together should use the same mod version: it is shown in the title
-of the "Broken Ground LAN" panel in the game.
+of the "LAN MULTIPLAYER" panel in the game.
 
 
 PLAY
 ----
 Host (the player who runs the server):
-1. Start Broken Ground. In the "Broken Ground LAN" panel choose "I host" and press "Apply".
+1. Start Broken Ground. In the "LAN MULTIPLAYER" panel choose "HOST" and press "APPLY".
    The panel shows the IP addresses your friends can use.
 2. Click "Connect" (the game's Steam login button), then Multiplayer > Create Game.
 
 Friends:
-1. Start Broken Ground. In the "Broken Ground LAN" panel choose "Join a friend",
-   type the host's IP address and press "Apply".
+1. Start Broken Ground. In the "LAN MULTIPLAYER" panel choose "JOIN",
+   type the server IP address and press "APPLY".
 2. Click "Connect", open the game list and join the host's game.
 
 When everybody is in the lobby, tick "Ready": the match starts after a short countdown.
 A match can start with 2 or more players even if the lobby is not full.
+
+
+DEDICATED SERVER
+----------------
+Want a server that stays on without anybody hosting from their game, like a Minecraft
+or Terraria server? Double click "Start Dedicated Server.bat" (the installer puts it
+next to BGLanPatcher.exe and in the game folder).
+- A console window shows the server log. Commands: help, list, kick <name>, ip, stop.
+- Closing the window (or typing stop) shuts the server down.
+- Players join it like any host: "JOIN" with your IP. You can play on the same
+  PC too: start the game normally and choose HOST (it uses the local server).
+- The dedicated server keeps the profiles in BGLan_profiles.json and its log in
+  BGLan_server.log, in the game folder.
 
 
 PLAYING OVER THE INTERNET

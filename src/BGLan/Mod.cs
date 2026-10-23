@@ -13,7 +13,7 @@ namespace BGLan
 {
     public static class Mod
     {
-        public const string Version = "1.3";
+        public const string Version = "1.4";
 
         private static bool initialized;
         private static HttpServer http;
@@ -35,14 +35,21 @@ namespace BGLan
             get { return game != null; }
         }
 
+        public static LanServer Server
+        {
+            get { return game; }
+        }
+
         public static void Init()
         {
             if (initialized) return;
             initialized = true;
             try
             {
+                if (Dedicated.Enabled) Log.FileName = Dedicated.LogFile;
                 Log.Info("Broken Ground LAN mod " + Version + " starting");
                 Config.Load();
+                if (Dedicated.Enabled) Dedicated.Init();
                 var go = new GameObject("BGLan");
                 UnityEngine.Object.DontDestroyOnLoad(go);
                 go.AddComponent<LanBehaviour>();
@@ -64,9 +71,8 @@ namespace BGLan
             if (Config.IsHost && game == null) StartServers();
             else if (!Config.IsHost && game != null) StopServers();
 
-            Status = Config.IsHost
-                ? (ServersRunning ? "Server running. Friends connect to: " + string.Join(", ", LocalAddresses().ToArray()) : Status)
-                : "Connecting to the server at " + Config.HostAddress;
+            if (Config.IsHost && ServersRunning) Status = "Server running. Friends connect to: " + string.Join(", ", LocalAddresses().ToArray());
+            else if (!Config.IsHost) Status = "Connecting to the server at " + Config.HostAddress;
         }
 
         private static void StartServers()
@@ -79,12 +85,27 @@ namespace BGLan
                 var emulator = new PlayFabEmulator(store, game);
                 http = new HttpServer(Config.HttpPort, emulator.Handle);
                 http.Start();
+                if (Dedicated.Enabled)
+                {
+                    Log.Info("Server ready. Type help for commands.");
+                    Dedicated.LogAddresses();
+                }
             }
             catch (Exception e)
             {
+                var se = e as SocketException;
+                if (se != null && se.SocketErrorCode == SocketError.AddressAlreadyInUse && !Dedicated.Enabled)
+                {
+                    // A dedicated server already runs on this PC: play on it (this game already points to 127.0.0.1).
+                    Log.Info("The ports are in use, a server is already running on this PC: using it");
+                    Status = "A server is already running on this PC: you will play on it.";
+                    StopServers();
+                    return;
+                }
                 Log.Error("Cannot start the LAN server: " + e);
                 Status = "ERROR: cannot start the server (" + e.Message + ")";
                 StopServers();
+                if (Dedicated.Enabled) Application.Quit();
             }
         }
 
@@ -100,6 +121,7 @@ namespace BGLan
         {
             MainThread.Drain();
             if (game != null) game.Tick();
+            if (Dedicated.Enabled) Dedicated.Tick();
         }
 
         public static void Shutdown()
@@ -155,7 +177,7 @@ namespace BGLan
         private void OnGUI()
         {
             // Only before logging in: afterwards the server address cannot change.
-            if (PlayFabClientAPI.IsClientLoggedIn()) return;
+            if (Dedicated.Enabled || PlayFabClientAPI.IsClientLoggedIn()) return;
             if (panel == null) panel = new LanPanel();
             panel.Draw();
         }
