@@ -1,8 +1,8 @@
 # Broken Ground LAN
 
 A fan-made mod that brings **Broken Ground** multiplayer back after the official servers were shut down.
-A player hosts the server **inside their own game**, or runs a **dedicated server** like a Minecraft or Terraria
-server; everybody else connects to its IP address over LAN, a virtual LAN (Radmin VPN, Hamachi, ZeroTier,
+A player hosts the server **inside their own game**, or runs a **dedicated server**;
+everybody else connects to its IP address over LAN, a virtual LAN (Radmin VPN, Hamachi, ZeroTier,
 Tailscale…) or the internet.
 
 - Steam login, profiles, game list, lobby, chat, ready-up
@@ -29,7 +29,7 @@ Every game needs one server. It can run in two ways:
 | How | Start the game, in the **LAN MULTIPLAYER** panel choose **HOST** → **APPLY** → **Connect** | Double click **`Start Dedicated Server.bat`** |
 | The host plays? | Yes, the server runs inside their game | Not necessarily: it runs in a console window, without graphics |
 | Server is up while | the host's game is open | the console window is open |
-| Good for | a quick game with friends | a server that stays on, like a Minecraft/Terraria server |
+| Good for | a quick game with friends | a server that stays on |
 
 The dedicated server shows its log live and accepts commands: `help`, `list` (games and players), `kick <name>`,
 `ip` (addresses to share), `stop`. It stops when you type `stop` or close the window. You can also play on the same

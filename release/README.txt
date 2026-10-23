@@ -39,8 +39,8 @@ A match can start with 2 or more players even if the lobby is not full.
 
 DEDICATED SERVER
 ----------------
-Want a server that stays on without anybody hosting from their game, like a Minecraft
-or Terraria server? Double click "Start Dedicated Server.bat" (the installer puts it
+Want a server that stays on without anybody hosting from their game?
+Double click "Start Dedicated Server.bat" (the installer puts it
 next to BGLanPatcher.exe and in the game folder).
 - A console window shows the server log. Commands: help, list, kick <name>, ip, stop.
 - Closing the window (or typing stop) shuts the server down.
